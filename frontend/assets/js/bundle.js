@@ -14,18 +14,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 var isEmail_1 = __importDefault(__webpack_require__(/*! validator/lib/isEmail */ "./node_modules/validator/lib/isEmail.js"));
-var SHOW_ERROR_MESSAGES = 'show-error-message';
-var form = document.querySelector('.form');
-var username = document.querySelector('.username');
-var email = document.querySelector('.email');
-var password = document.querySelector('.password');
-var password2 = document.querySelector('.password2');
-form.addEventListener('submit', function (event) {
+var SHOW_ERROR_MESSAGES = "show-error-message";
+var form = document.querySelector(".form");
+var username = document.querySelector(".username");
+var email = document.querySelector(".email");
+var password = document.querySelector(".password");
+var password2 = document.querySelector(".password2");
+form.addEventListener("submit", function (event) {
     event.preventDefault();
     hideErrorMessages(this);
     checkForEmptyFields(username, email, password, password2);
     checkEmail(email);
     checkEqualPasswords(password, password2);
+    checkLengthPasswords(password, password2);
     if (shouldSendForm(this))
         form.submit();
 });
@@ -36,33 +37,41 @@ function checkForEmptyFields() {
     }
     inputs.forEach(function (input) {
         if (!input.value)
-            showErrorMessage(input, 'Campo não pode ficar vazio');
+            showErrorMessage(input, "Campo não pode ficar vazio");
     });
 }
 function checkEmail(input) {
     if (!(0, isEmail_1.default)(input.value))
-        showErrorMessage(input, 'Email inválido');
+        showErrorMessage(input, "Email inválido");
 }
 function checkEqualPasswords(password, password2) {
     if (password.value !== password2.value) {
-        showErrorMessage(password, 'Senhas não coincidem');
-        showErrorMessage(password2, 'Senhas não coincidem');
+        showErrorMessage(password, "Senhas não coincidem");
+        showErrorMessage(password2, "Senhas não coincidem");
+    }
+}
+function checkLengthPasswords(password, password2) {
+    if (password.value.length < 8 && password2.value.length < 8) {
+        showErrorMessage(password, 'Senha precisa 8 caracteres');
+        showErrorMessage(password2, 'Senha precisa 8 caracteres');
     }
 }
 function hideErrorMessages(form) {
     form
-        .querySelectorAll('.' + SHOW_ERROR_MESSAGES)
+        .querySelectorAll("." + SHOW_ERROR_MESSAGES)
         .forEach(function (item) { return item.classList.remove(SHOW_ERROR_MESSAGES); });
 }
 function showErrorMessage(input, msg) {
     var formFields = input.parentElement;
-    var erroMessage = formFields.querySelector('.error-message');
+    var erroMessage = formFields.querySelector(".error-message");
     erroMessage.innerText = msg;
     formFields.classList.add(SHOW_ERROR_MESSAGES);
 }
 function shouldSendForm(form) {
     var send = true;
-    form.querySelectorAll('.' + SHOW_ERROR_MESSAGES).forEach(function () { return (send = false); });
+    form
+        .querySelectorAll("." + SHOW_ERROR_MESSAGES)
+        .forEach(function () { return (send = false); });
     return send;
 }
 
