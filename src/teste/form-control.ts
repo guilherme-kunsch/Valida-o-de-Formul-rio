@@ -13,6 +13,8 @@ form.addEventListener('submit', function(event: Event){
     hideErrorMessages(this);
     checkForEmptyFields(username, email, password, password2);
     checkEmail(email);
+    checkEqualPasswords(password, password2);
+    if(shouldSendForm(this)) form.submit();
 });
 
 function checkForEmptyFields(...inputs: HTMLInputElement[]): void {
@@ -23,6 +25,13 @@ function checkForEmptyFields(...inputs: HTMLInputElement[]): void {
 
 function checkEmail(input: HTMLInputElement){
     if(!isEmail(input.value)) showErrorMessage(input, 'Email inválido')
+}
+
+function checkEqualPasswords(password: HTMLInputElement, password2: HTMLInputElement) {
+    if(password.value !== password2.value){
+        showErrorMessage(password, 'Senhas não coincidem');
+        showErrorMessage(password2, 'Senhas não coincidem');
+    }
 }
 
 function hideErrorMessages(form: HTMLFormElement): void {
@@ -37,5 +46,11 @@ function showErrorMessage(input: HTMLInputElement, msg: string): void {
     erroMessage.innerText = msg;
     formFields.classList.add(SHOW_ERROR_MESSAGES);
 
+}
+
+function shouldSendForm(form: HTMLFormElement): boolean {
+    let send = true;
+    form.querySelectorAll('.' + SHOW_ERROR_MESSAGES).forEach(() => (send = false));
+    return send
 }
 

@@ -25,6 +25,9 @@ form.addEventListener('submit', function (event) {
     hideErrorMessages(this);
     checkForEmptyFields(username, email, password, password2);
     checkEmail(email);
+    checkEqualPasswords(password, password2);
+    if (shouldSendForm(this))
+        form.submit();
 });
 function checkForEmptyFields() {
     var inputs = [];
@@ -40,6 +43,12 @@ function checkEmail(input) {
     if (!(0, isEmail_1.default)(input.value))
         showErrorMessage(input, 'Email inválido');
 }
+function checkEqualPasswords(password, password2) {
+    if (password.value !== password2.value) {
+        showErrorMessage(password, 'Senhas não coincidem');
+        showErrorMessage(password2, 'Senhas não coincidem');
+    }
+}
 function hideErrorMessages(form) {
     form
         .querySelectorAll('.' + SHOW_ERROR_MESSAGES)
@@ -50,6 +59,11 @@ function showErrorMessage(input, msg) {
     var erroMessage = formFields.querySelector('.error-message');
     erroMessage.innerText = msg;
     formFields.classList.add(SHOW_ERROR_MESSAGES);
+}
+function shouldSendForm(form) {
+    var send = true;
+    form.querySelectorAll('.' + SHOW_ERROR_MESSAGES).forEach(function () { return (send = false); });
+    return send;
 }
 
 
